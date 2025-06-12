@@ -6,7 +6,8 @@ import  numpy as np
 from    sklearn.datasets import fetch_california_housing as dados
 
 e   = math.exp(1)
-log = np.log()
+
+def log(x): return np.log(x)
 
 def theta(z):
     '''
