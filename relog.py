@@ -23,22 +23,6 @@ def theta(z):
 
     return 1/(1 + e**(-z))
 
-
-def h(w,z):
-    '''
-    ENTRADA:
-
-            int z - um inteiro resultante do produto escalar w^{T} * \tilde{x}
-
-    FUNCIONAMENTO:
-            o método retornará o valor da função sigmoide \theta
-            calculada num valor z
-
-    SAÍDA:
-            int x - o resultado de z calculada na função sigmoide
-    '''
-
-
 def loss(X, y, w, N):
     '''
     ENTRADA:
@@ -69,27 +53,33 @@ def loss(X, y, w, N):
     return -1/N * (somatorio)
 
 
-def der_parc_loss(x, w):
+def dloss_dw(X, y, w, N):
     '''
     ENTRADA:
 
-            int z - um inteiro resultante do produto escalar w^{T} * \tilde{x}
+            vector  X:  uma matriz de vetores x de features
+
+            vector  y:  um vetor de classificações y^(n) \in {0,1} para cada vetor x 
+
+            vector  w:  vetor de pesos para a reta final
+
+            int     N:  tamanho da matriz X 
 
     FUNCIONAMENTO:
-            o método retornará o valor da função sigmoide \theta
-            calculada num valor z
+            o método irá calcular a derivada parcial da função loss()
+            para encontrar a variação delta w do vetor de pesos
 
     SAÍDA:
-            int x - o resultado de z calculada na função sigmoide
+            float somatorio - resultado do delta wj
     '''
 
-    somatorio = 
+    for i in range(N):
+        y_hat = theta(w @ X[i])
 
-    return 
+        somatorio = (y[i] - y_hat)*X[i]
+
+    return somatorio
     
-
-
-
 
 
 def main():
