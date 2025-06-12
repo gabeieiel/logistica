@@ -1,11 +1,10 @@
 import  sys
-import  random
 import  math
 import  matplotlib.pyplot as plt
 import  numpy as np
 from    sklearn.datasets import fetch_california_housing as dados
 
-e   = math.exp(1)
+e = math.exp(1)
 
 def log(x): return np.log(x)
 
@@ -44,14 +43,15 @@ def loss(X, y, w, N):
             valor numérico da função de perda
     '''
 
-    
+    somatorio = 0
+
     for i in range(N):
 
         y_hat = theta(X[i] @ w)
 
-        somatorio = y[i] * log(y_hat) + (1 - y[i])*log(1 - y_hat)  
+        somatorio += y[i] * log(y_hat) + (1 - y[i])*log(1 - y_hat)  
 
-    return -1/N * (somatorio)
+    return (-1/N) * somatorio
 
 
 def dloss_dw(X, y, w, N):
@@ -74,10 +74,12 @@ def dloss_dw(X, y, w, N):
             float somatorio - resultado do delta wj
     '''
 
+    somatorio = 0
+
     for i in range(N):
         y_hat = theta(w @ X[i])
 
-        somatorio = (y[i] - y_hat)*X[i]
+        somatorio += (y[i] - y_hat)*X[i]
 
     return somatorio
     
@@ -87,28 +89,36 @@ def main():
     epocas  = int(sys.argv[1])      # numero de iteracoes
     alpha   = float(sys.argv[2])    # learning rate
     epsilon = float(sys.argv[3])    # erro tolerado
-
     
     ### dados do california housing ###
-    X_REAL = dados().data[:, 0]     # dados de entrada [0,5]
-    Y_REAL = dados().target         # variável alvo (preço médio de casa)
+
+    X_REAL = dados().data[:, 0]                             # dados de entrada [0,5]
+    
+    X_REAL = (X_REAL - np.mean(X_REAL)) / np.std(X_REAL)    # normalização dos dados
+    X = np.c_[np.ones(X_REAL.shape[0]), X_REAL]             # shape (N, 2)
+
+    Y_REAL = dados().target                                 # variável alvo (preço médio de casa)
+    y = (Y_REAL > np.median(Y_REAL)).astype(int)            # binariza os rótulos para regressão logística
+    
+    ############
+
+    w = np.zeros(X.shape[1])        # vetor de pesos, inicializado com 0's
+    N = len(y)
 
 
-    ### coeficientes de f gerados aleatoriamente ###
-    a = random.uniform(-100,100)
-    b = random.uniform(-100,100)    
+    for epoca in range(epocas):
 
-    ERROS = grad_desc_iter(a, b, alpha, epsilon, epocas, X_REAL, Y_REAL)
+        if epoca % 50 == 0:
+            
+            perda_atual = loss(X, y, w, N)
+            print(f"Época {epoca}: perda = {perda_atual:.4f}")
 
-    titulo_erro =   "Progressão do Erro Quadrático Médio (EQM) de f(x)"
-    label_erro  =   "EQM"
+        grad = dloss_dw(X, y, w, epocas)
+        w   += alpha * grad
 
-    DOMINIO_ERRO = list(range(len(ERROS)))
+        if np.linalg.norm(grad) < epsilon:
+            break
 
-
-    plt.figure(figsize=(14,7))
-    plota_reta(DOMINIO_ERRO, ERROS, 'r', label_erro, titulo_erro, "Iterações", "Erro")
-    plt.show()
 
 
 if __name__ == "__main__":
