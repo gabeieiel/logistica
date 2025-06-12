@@ -1,0 +1,124 @@
+import  sys
+import  random
+import  math
+import  matplotlib.pyplot as plt
+import  numpy as np
+from    sklearn.datasets import fetch_california_housing as dados
+
+e   = math.exp(1)
+log = np.log()
+
+def theta(z):
+    '''
+    ENTRADA:
+            int z - um inteiro resultante do produto escalar w^{T} * \tilde{x}
+
+    FUNCIONAMENTO:
+            o método retornará o valor da função sigmoide \theta
+            calculada num valor z
+
+    SAÍDA:
+            int x - o resultado de z calculada na função sigmoide
+    '''
+
+    return 1/(1 + e**(-z))
+
+
+def h(w,z):
+    '''
+    ENTRADA:
+
+            int z - um inteiro resultante do produto escalar w^{T} * \tilde{x}
+
+    FUNCIONAMENTO:
+            o método retornará o valor da função sigmoide \theta
+            calculada num valor z
+
+    SAÍDA:
+            int x - o resultado de z calculada na função sigmoide
+    '''
+
+
+def loss(X, y, w, N):
+    '''
+    ENTRADA:
+
+            vector  X:  uma matriz de vetores x de features
+
+            vector  y:  um vetor de classificações y^(n) \in {0,1} para cada vetor x 
+
+            vector  w:  vetor de pesos para a reta final
+
+            int     N:  tamanho da matriz X    
+
+    FUNCIONAMENTO:
+            o método retornará o valor da perda (binary cross-entry)
+            da regressão logística
+
+    SAÍDA:
+            valor numérico da função de perda
+    '''
+
+    
+    for i in range(N):
+
+        y_hat = theta(X[i] @ w)
+
+        somatorio = y[i] * log(y_hat) + (1 - y[i])*log(1 - y_hat)  
+
+    return -1/N * (somatorio)
+
+
+def der_parc_loss(x, w):
+    '''
+    ENTRADA:
+
+            int z - um inteiro resultante do produto escalar w^{T} * \tilde{x}
+
+    FUNCIONAMENTO:
+            o método retornará o valor da função sigmoide \theta
+            calculada num valor z
+
+    SAÍDA:
+            int x - o resultado de z calculada na função sigmoide
+    '''
+
+    somatorio = 
+
+    return 
+    
+
+
+
+
+
+def main():
+    epocas  = int(sys.argv[1])      # numero de iteracoes
+    alpha   = float(sys.argv[2])    # learning rate
+    epsilon = float(sys.argv[3])    # erro tolerado
+
+    
+    ### dados do california housing ###
+    X_REAL = dados().data[:, 0]     # dados de entrada [0,5]
+    Y_REAL = dados().target         # variável alvo (preço médio de casa)
+
+
+    ### coeficientes de f gerados aleatoriamente ###
+    a = random.uniform(-100,100)
+    b = random.uniform(-100,100)    
+
+    ERROS = grad_desc_iter(a, b, alpha, epsilon, epocas, X_REAL, Y_REAL)
+
+    titulo_erro =   "Progressão do Erro Quadrático Médio (EQM) de f(x)"
+    label_erro  =   "EQM"
+
+    DOMINIO_ERRO = list(range(len(ERROS)))
+
+
+    plt.figure(figsize=(14,7))
+    plota_reta(DOMINIO_ERRO, ERROS, 'r', label_erro, titulo_erro, "Iterações", "Erro")
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
